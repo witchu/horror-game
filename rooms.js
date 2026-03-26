@@ -195,8 +195,16 @@ ROOMS.bathroom = {
         },
         {
             id: 'door_back_bedroom', label: 'กลับห้องนอน',
-            x: '88%', y: '20%', w: '10%', h: '45%',
+            x: '88%', y: '20%', w: '10%', h: '25%',
             interactions: [{ condition: () => true, text: null, action: (s) => s.goToRoom('bedroom') }]
+        },
+        {
+            id: 'door_hallway_bath', label: 'ออกสู่โถงทางเดิน',
+            x: '88%', y: '50%', w: '10%', h: '25%',
+            interactions: [
+                { condition: (s) => !s.hasItem('flashlight'), text: 'ประตูออกสู่โถงทางเดิน มืดสนิทข้างนอก ต้องมีไฟฉายก่อน', action: null },
+                { condition: (s) => s.hasItem('flashlight'), text: null, action: (s) => s.goToRoom('hallway') }
+            ]
         }
     ]
 };
@@ -253,8 +261,24 @@ ROOMS.hallway = {
         },
         {
             id: 'door_back_bedroom2', label: 'กลับห้องนอน',
-            x: '2%', y: '55%', w: '10%', h: '35%',
+            x: '2%', y: '55%', w: '10%', h: '15%',
             interactions: [{ condition: () => true, text: null, action: (s) => s.goToRoom('bedroom') }]
+        },
+        {
+            id: 'door_bathroom_hall', label: 'ประตูห้องน้ำ',
+            x: '2%', y: '72%', w: '10%', h: '15%',
+            interactions: [
+                { condition: (s) => s.flags.bathroom_unlocked, text: null, action: (s) => s.goToRoom('bathroom') },
+                { condition: (s) => !s.flags.bathroom_unlocked, text: 'ประตูห้องน้ำล็อคจากข้างใน ต้องเข้าจากห้องนอน', action: null }
+            ]
+        },
+        {
+            id: 'door_living_hall', label: 'ทางลงห้องนั่งเล่น',
+            x: '75%', y: '65%', w: '15%', h: '20%',
+            interactions: [
+                { condition: (s) => s.flags.stairs_passed, text: null, action: (s) => s.goToRoom('living_room') },
+                { condition: (s) => !s.flags.stairs_passed, text: 'ต้องลงบันไดก่อนถึงจะไปชั้นล่างได้', action: null }
+            ]
         }
     ]
 };
