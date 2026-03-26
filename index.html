@@ -30,10 +30,23 @@
             <div id="vignette-overlay"></div>
             <div id="room-name-display"></div>
 
+            <!-- Game Time HUD -->
+            <div id="game-time-hud">⏰ <span id="game-time-text">5:30</span></div>
+
             <!-- Interaction text popup -->
             <div id="interaction-popup" class="hidden">
                 <p id="interaction-text"></p>
                 <div id="interaction-choices"></div>
+            </div>
+
+            <!-- Garden Map Overlay -->
+            <div id="garden-map-overlay" class="hidden">
+                <div class="garden-map-content">
+                    <h3>🗺 แผนที่สวน</h3>
+                    <div id="garden-grid"></div>
+                    <p class="garden-legend">🟢 ปลอดภัย &nbsp; 🔴 กับดัก &nbsp; 📬 ตู้ไปรษณีย์</p>
+                    <button id="btn-close-map" class="btn-horror btn-small">ปิดแผนที่</button>
+                </div>
             </div>
         </div>
 
@@ -60,15 +73,11 @@
             </div>
         </div>
 
-        <!-- Wardrobe Code Input -->
+        <!-- Code Input (configurable digits) -->
         <div id="code-input-overlay" class="hidden">
             <div class="code-input-box">
                 <h3 id="code-input-title">ใส่รหัส</h3>
-                <div id="code-digits">
-                    <input type="text" maxlength="1" class="code-digit" data-idx="0" inputmode="numeric">
-                    <input type="text" maxlength="1" class="code-digit" data-idx="1" inputmode="numeric">
-                    <input type="text" maxlength="1" class="code-digit" data-idx="2" inputmode="numeric">
-                </div>
+                <div id="code-digits"></div>
                 <p id="code-attempts-left"></p>
                 <div class="code-buttons">
                     <button id="btn-code-submit" class="btn-horror btn-small">ยืนยัน</button>
@@ -100,6 +109,79 @@
             </div>
         </div>
 
+        <!-- Stove Puzzle -->
+        <div id="stove-overlay" class="hidden">
+            <div class="stove-box">
+                <h3>🍳 เตาแก๊ส — จุดตามลำดับ</h3>
+                <p>เลือกหัวเตาที่จะจุดต่อไป</p>
+                <p id="stove-sequence-display" class="stove-seq"></p>
+                <div class="stove-grid">
+                    <button class="stove-burner" data-pos="bl">🔵 หลังซ้าย</button>
+                    <button class="stove-burner" data-pos="br">🔵 หลังขวา</button>
+                    <button class="stove-burner" data-pos="fr">🔵 หน้าขวา</button>
+                    <button class="stove-burner" data-pos="fl">🔵 หน้าซ้าย</button>
+                </div>
+                <button id="btn-stove-cancel" class="btn-horror btn-small btn-cancel">เดินออก</button>
+            </div>
+        </div>
+
+        <!-- Stair Puzzle -->
+        <div id="stair-overlay" class="hidden">
+            <div class="stair-box">
+                <h3>🪜 บันได — เลือกขั้นที่จะเหยียบ</h3>
+                <p>คลิกขั้นบันไดจากบนลงล่าง หลีกเลี่ยงขั้นที่อันตราย!</p>
+                <div id="stair-steps"></div>
+                <div class="stair-buttons">
+                    <button id="btn-stair-cancel" class="btn-horror btn-small btn-cancel">กลับขึ้น</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chair Puzzle -->
+        <div id="chair-overlay" class="hidden">
+            <div class="chair-box">
+                <h3>🪑 เลือกเก้าอี้ที่จะนั่ง</h3>
+                <p>มี 6 ตัว มีเพียง 1 ตัวที่ปลอดภัย</p>
+                <div id="chair-choices"></div>
+                <button id="btn-chair-cancel" class="btn-horror btn-small btn-cancel">เดินออก</button>
+            </div>
+        </div>
+
+        <!-- Washing Machine Countdown -->
+        <div id="washer-overlay" class="hidden">
+            <div class="washer-box">
+                <h3>🧺 เครื่องซักผ้า</h3>
+                <p id="washer-status">เครื่องกำลังหมุนอยู่...</p>
+                <div id="washer-countdown-bar">
+                    <div id="washer-countdown-fill"></div>
+                </div>
+                <p id="washer-timer-text"></p>
+                <div class="washer-buttons">
+                    <button id="btn-washer-stop" class="btn-horror btn-small">⏹ กดหยุดเครื่อง</button>
+                    <button id="btn-washer-open" class="btn-horror btn-small btn-danger hidden">เปิดฝาเครื่อง</button>
+                    <button id="btn-washer-cancel" class="btn-horror btn-small btn-cancel">เดินออก</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Road Crossing / Final Scene -->
+        <div id="road-overlay" class="hidden">
+            <div class="road-box">
+                <h3>🛣 ถนน — ฉากสุดท้าย</h3>
+                <p id="road-status">สัญญาณไฟกระพริบ... รอให้กระพริบครบ 3 ครั้ง</p>
+                <div id="road-signal">
+                    <span class="signal-light" id="signal-1">⚫</span>
+                    <span class="signal-light" id="signal-2">⚫</span>
+                    <span class="signal-light" id="signal-3">⚫</span>
+                </div>
+                <div class="road-actions hidden" id="road-actions">
+                    <button id="btn-road-walk" class="btn-horror btn-small">🚶 เดินข้าม (มองตรงไปข้างหน้า)</button>
+                    <button id="btn-road-run" class="btn-horror btn-small btn-danger">🏃 วิ่งข้าม</button>
+                    <button id="btn-road-look-back" class="btn-horror btn-small btn-danger">👀 หันกลับมามองบ้าน</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Item Detail (right-click) -->
         <div id="item-detail" class="hidden">
             <div class="item-detail-inner">
@@ -121,14 +203,14 @@
         </div>
     </div>
 
-    <!-- Demo End Screen -->
-    <div id="demo-end-screen" class="hidden">
-        <div class="demo-end-content">
-            <h1 class="title-logo">WAKE</h1>
-            <h2>— จบ Demo —</h2>
-            <p>คุณสำรวจห้องนอนและห้องน้ำสำเร็จ</p>
-            <p class="demo-stats" id="demo-stats"></p>
-            <button id="btn-replay" class="btn-horror">เล่นใหม่</button>
+    <!-- Ending Screen -->
+    <div id="ending-screen" class="hidden">
+        <div class="ending-content">
+            <h1 class="title-logo ending-logo">WAKE</h1>
+            <h2 id="ending-title"></h2>
+            <p id="ending-text" class="ending-quote"></p>
+            <p id="ending-stats" class="demo-stats"></p>
+            <button id="btn-ending-replay" class="btn-horror">เล่นใหม่</button>
         </div>
     </div>
 
