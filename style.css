@@ -1,0 +1,739 @@
+/* ===========================
+   WAKE — Horror Adventure CSS
+   =========================== */
+
+:root {
+    --bg-dark: #0a0c0b;
+    --bg-panel: #111413;
+    --bg-panel-trans: rgba(17, 20, 19, 0.92);
+    --text-main: #c8cdc9;
+    --text-dim: #6b726d;
+    --text-bright: #e8ebe9;
+    --accent-green: #3a5a3f;
+    --accent-glow: #5a8a5f;
+    --accent-red: #8b2020;
+    --accent-red-bright: #cc3333;
+    --border-subtle: #2a2f2c;
+    --border-glow: rgba(90, 138, 95, 0.4);
+    --font-horror: 'Creepster', cursive;
+    --font-body: 'Noto Sans Thai', 'Special Elite', sans-serif;
+    --font-mono: 'Special Elite', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    cursor: default;
+    user-select: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===========================
+   Title Screen
+   =========================== */
+#title-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    z-index: 1000;
+}
+
+.title-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+}
+
+.title-content {
+    text-align: center;
+    z-index: 1;
+    animation: titleFadeIn 2s ease-out;
+}
+
+.title-logo {
+    font-family: var(--font-horror);
+    font-size: 8rem;
+    color: var(--text-bright);
+    text-shadow:
+        0 0 20px rgba(90, 138, 95, 0.5),
+        0 0 60px rgba(90, 138, 95, 0.2),
+        0 4px 8px rgba(0,0,0,0.8);
+    letter-spacing: 0.3em;
+    animation: titlePulse 4s ease-in-out infinite;
+}
+
+.title-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.5em;
+}
+
+@keyframes titleFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titlePulse {
+    0%, 100% { text-shadow: 0 0 20px rgba(90,138,95,0.5), 0 0 60px rgba(90,138,95,0.2); }
+    50% { text-shadow: 0 0 30px rgba(90,138,95,0.7), 0 0 80px rgba(90,138,95,0.3); }
+}
+
+/* Buttons */
+.btn-horror {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    padding: 12px 36px;
+    margin-top: 2rem;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--accent-green);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.1em;
+}
+
+.btn-horror:hover {
+    background: var(--accent-green);
+    color: var(--text-bright);
+    box-shadow: 0 0 20px rgba(90, 138, 95, 0.4);
+    transform: scale(1.02);
+}
+
+.btn-small {
+    font-size: 0.9rem;
+    padding: 8px 24px;
+    margin-top: 1rem;
+}
+
+.btn-cancel {
+    border-color: var(--text-dim);
+    color: var(--text-dim);
+}
+
+.btn-cancel:hover {
+    background: rgba(107, 114, 109, 0.2);
+    color: var(--text-main);
+    box-shadow: none;
+}
+
+.btn-danger {
+    border-color: var(--accent-red);
+    color: var(--accent-red-bright);
+}
+
+.btn-danger:hover {
+    background: var(--accent-red);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(139, 32, 32, 0.4);
+}
+
+.btn-ui {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-subtle);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-ui:hover {
+    color: var(--text-main);
+    border-color: var(--accent-green);
+}
+
+/* ===========================
+   Game Screen
+   =========================== */
+#game-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Room Container */
+#room-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #050705;
+}
+
+#room-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.5s ease;
+}
+
+#room-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: background 0.5s ease;
+}
+
+#room-overlay.lights-off {
+    background: rgba(0, 0, 5, 0.85);
+}
+
+#hotspots-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+}
+
+#vignette-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+    z-index: 11;
+}
+
+#room-name-display {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-horror);
+    font-size: 1.8rem;
+    color: var(--text-dim);
+    text-shadow: 0 0 10px rgba(90,138,95,0.3);
+    z-index: 12;
+    opacity: 0;
+    animation: roomNameFade 3s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes roomNameFade {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    80% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* Hotspots */
+.hotspot {
+    position: absolute;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.hotspot::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-panel-trans);
+    color: var(--text-bright);
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    border: 1px solid var(--border-subtle);
+}
+
+.hotspot:hover {
+    border-color: var(--border-glow);
+    background: rgba(90, 138, 95, 0.08);
+    box-shadow: 0 0 15px rgba(90, 138, 95, 0.15), inset 0 0 15px rgba(90, 138, 95, 0.05);
+}
+
+.hotspot:hover::after {
+    opacity: 1;
+}
+
+.hotspot.disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.hotspot.disabled:hover {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+}
+
+/* Interaction Popup */
+#interaction-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-panel-trans);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 24px 32px;
+    max-width: 500px;
+    z-index: 20;
+    backdrop-filter: blur(10px);
+    animation: popupIn 0.3s ease-out;
+}
+
+#interaction-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+#interaction-choices {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+@keyframes popupIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ===========================
+   Inventory Bar
+   =========================== */
+#inventory-bar {
+    height: 72px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    z-index: 50;
+}
+
+#inventory-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    min-width: 60px;
+}
+
+#inventory-slots {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+}
+
+.inv-slot {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+}
+
+.inv-slot.has-item {
+    border-color: var(--accent-green);
+    cursor: pointer;
+    background: rgba(58, 90, 63, 0.1);
+}
+
+.inv-slot.has-item:hover {
+    background: rgba(58, 90, 63, 0.2);
+    box-shadow: 0 0 10px rgba(90, 138, 95, 0.3);
+    transform: translateY(-2px);
+}
+
+.inv-slot.selected {
+    border-color: var(--accent-glow);
+    box-shadow: 0 0 15px rgba(90, 138, 95, 0.5);
+    background: rgba(58, 90, 63, 0.25);
+}
+
+.inv-slot .item-name {
+    position: absolute;
+    bottom: -18px;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+/* ===========================
+   Journal Panel
+   =========================== */
+#journal-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+}
+
+.journal-inner {
+    background: #1a1c1b;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.journal-inner h2 {
+    font-family: var(--font-horror);
+    font-size: 1.6rem;
+    color: var(--text-bright);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(90,138,95,0.3);
+}
+
+.journal-entry {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+.journal-entry:last-child {
+    border-bottom: none;
+}
+
+.journal-entry .entry-icon {
+    margin-right: 8px;
+}
+
+.journal-entry.hint {
+    color: var(--accent-glow);
+    font-style: italic;
+}
+
+.journal-empty {
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 20px 0;
+}
+
+/* ===========================
+   Code Input Overlay
+   =========================== */
+#code-input-overlay, #bottle-overlay, #shower-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+}
+
+.code-input-box, .bottle-box, .shower-box {
+    background: #1a1c1b;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+}
+
+.code-input-box h3, .bottle-box h3, .shower-box h3 {
+    font-family: var(--font-horror);
+    font-size: 1.4rem;
+    color: var(--text-bright);
+    margin-bottom: 1rem;
+}
+
+#code-digits {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.code-digit {
+    width: 56px;
+    height: 64px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--accent-green);
+    border-radius: 6px;
+    color: var(--text-bright);
+    font-family: var(--font-horror);
+    font-size: 2rem;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.code-digit:focus {
+    border-color: var(--accent-glow);
+    box-shadow: 0 0 15px rgba(90,138,95,0.4);
+}
+
+#code-attempts-left {
+    font-size: 0.85rem;
+    color: var(--accent-red-bright);
+    margin-bottom: 0.5rem;
+}
+
+.code-buttons, .shower-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Bottle Selection */
+.bottle-hint {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+#bottle-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.bottle-btn {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 10px 16px;
+    background: rgba(0,0,0,0.3);
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    max-width: 120px;
+}
+
+.bottle-btn:hover {
+    border-color: var(--accent-green);
+    background: rgba(58, 90, 63, 0.15);
+}
+
+/* ===========================
+   Item Detail
+   =========================== */
+#item-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+}
+
+.item-detail-inner {
+    background: #1a1c1b;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+    max-width: 350px;
+}
+
+#item-detail-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+#item-detail-name {
+    font-family: var(--font-horror);
+    font-size: 1.3rem;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+}
+
+#item-detail-desc {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+
+/* ===========================
+   Death Screen
+   =========================== */
+#death-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+}
+
+.death-flash {
+    position: absolute;
+    inset: 0;
+    background: var(--accent-red);
+    animation: deathFlash 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+.death-content {
+    text-align: center;
+    z-index: 1;
+    animation: deathFadeIn 1.5s ease-out 0.5s both;
+}
+
+.death-title {
+    font-family: var(--font-horror);
+    font-size: 4rem;
+    color: var(--accent-red-bright);
+    text-shadow: 0 0 30px rgba(139, 32, 32, 0.6);
+    margin-bottom: 1rem;
+}
+
+#death-reason {
+    font-size: 1rem;
+    color: var(--text-dim);
+    max-width: 400px;
+    line-height: 1.7;
+    margin: 0 auto;
+}
+
+@keyframes deathFlash {
+    0% { opacity: 0.8; }
+    30% { opacity: 0.6; }
+    100% { opacity: 0; }
+}
+
+@keyframes deathFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ===========================
+   Demo End Screen
+   =========================== */
+#demo-end-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+}
+
+.demo-end-content {
+    text-align: center;
+    animation: fadeIn 1.5s ease-out;
+}
+
+.demo-end-content h2 {
+    font-family: var(--font-horror);
+    font-size: 2rem;
+    color: var(--accent-glow);
+    margin-top: 0.5rem;
+}
+
+.demo-end-content p {
+    color: var(--text-dim);
+    margin-top: 0.8rem;
+    font-size: 1rem;
+}
+
+.demo-stats {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-top: 1rem;
+}
+
+/* ===========================
+   Transition Overlay
+   =========================== */
+#transition-overlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+
+#transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ===========================
+   Flickering Effect (Bathroom)
+   =========================== */
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.6; }
+}
+
+.flickering #room-bg {
+    animation: flicker 4s infinite;
+}
+
+/* ===========================
+   Utilities
+   =========================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Mirror stare timer bar */
+.stare-timer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-red-bright));
+    transition: width 0.1s linear;
+    z-index: 15;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-panel); }
+::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-green); }

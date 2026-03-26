@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WAKE — Point-and-Click Psychological Horror Adventure Game">
+    <title>WAKE — ตื่น</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Noto+Sans+Thai:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Title Screen -->
+    <div id="title-screen">
+        <div class="title-vignette"></div>
+        <div class="title-content">
+            <h1 class="title-logo">WAKE</h1>
+            <p class="title-subtitle">ตื่น</p>
+            <button id="btn-start" class="btn-horror">เริ่มเกม</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="hidden">
+        <!-- Room Display -->
+        <div id="room-container">
+            <div id="room-bg"></div>
+            <div id="room-overlay"></div>
+            <div id="hotspots-layer"></div>
+            <div id="vignette-overlay"></div>
+            <div id="room-name-display"></div>
+
+            <!-- Interaction text popup -->
+            <div id="interaction-popup" class="hidden">
+                <p id="interaction-text"></p>
+                <div id="interaction-choices"></div>
+            </div>
+        </div>
+
+        <!-- Inventory Bar -->
+        <div id="inventory-bar">
+            <div id="inventory-label">🎒 ไอเทม</div>
+            <div id="inventory-slots">
+                <div class="inv-slot" data-slot="0"></div>
+                <div class="inv-slot" data-slot="1"></div>
+                <div class="inv-slot" data-slot="2"></div>
+                <div class="inv-slot" data-slot="3"></div>
+                <div class="inv-slot" data-slot="4"></div>
+                <div class="inv-slot" data-slot="5"></div>
+            </div>
+            <button id="btn-journal" class="btn-ui">📓 สมุดบันทึก</button>
+        </div>
+
+        <!-- Journal Panel -->
+        <div id="journal-panel" class="hidden">
+            <div class="journal-inner">
+                <h2>📓 สมุดบันทึก</h2>
+                <div id="journal-entries"></div>
+                <button id="btn-close-journal" class="btn-horror btn-small">ปิด</button>
+            </div>
+        </div>
+
+        <!-- Wardrobe Code Input -->
+        <div id="code-input-overlay" class="hidden">
+            <div class="code-input-box">
+                <h3 id="code-input-title">ใส่รหัส</h3>
+                <div id="code-digits">
+                    <input type="text" maxlength="1" class="code-digit" data-idx="0" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" data-idx="1" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" data-idx="2" inputmode="numeric">
+                </div>
+                <p id="code-attempts-left"></p>
+                <div class="code-buttons">
+                    <button id="btn-code-submit" class="btn-horror btn-small">ยืนยัน</button>
+                    <button id="btn-code-cancel" class="btn-horror btn-small btn-cancel">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottle Selection -->
+        <div id="bottle-overlay" class="hidden">
+            <div class="bottle-box">
+                <h3>ตู้ยา — เลือกขวดที่ถูกต้อง</h3>
+                <p class="bottle-hint">ขวดยามี 5 ขวด มีเพียงขวดเดียวที่ถูกต้อง</p>
+                <div id="bottle-choices"></div>
+                <button id="btn-bottle-cancel" class="btn-horror btn-small btn-cancel">ปิดตู้</button>
+            </div>
+        </div>
+
+        <!-- Shower Puzzle -->
+        <div id="shower-overlay" class="hidden">
+            <div class="shower-box">
+                <h3>ฝักบัว — เลือกลำดับน้ำ</h3>
+                <p>จะเปิดน้ำอะไรก่อน?</p>
+                <div class="shower-buttons">
+                    <button id="btn-cold-water" class="btn-horror btn-small">🧊 น้ำเย็น</button>
+                    <button id="btn-hot-water" class="btn-horror btn-small btn-danger">🔥 น้ำร้อน</button>
+                </div>
+                <button id="btn-shower-cancel" class="btn-horror btn-small btn-cancel">เดินออก</button>
+            </div>
+        </div>
+
+        <!-- Item Detail (right-click) -->
+        <div id="item-detail" class="hidden">
+            <div class="item-detail-inner">
+                <div id="item-detail-icon"></div>
+                <h3 id="item-detail-name"></h3>
+                <p id="item-detail-desc"></p>
+                <button id="btn-close-detail" class="btn-horror btn-small">ปิด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Death Screen -->
+    <div id="death-screen" class="hidden">
+        <div class="death-flash"></div>
+        <div class="death-content">
+            <h2 class="death-title">คุณตาย</h2>
+            <p id="death-reason"></p>
+            <button id="btn-restart" class="btn-horror">ลองใหม่</button>
+        </div>
+    </div>
+
+    <!-- Demo End Screen -->
+    <div id="demo-end-screen" class="hidden">
+        <div class="demo-end-content">
+            <h1 class="title-logo">WAKE</h1>
+            <h2>— จบ Demo —</h2>
+            <p>คุณสำรวจห้องนอนและห้องน้ำสำเร็จ</p>
+            <p class="demo-stats" id="demo-stats"></p>
+            <button id="btn-replay" class="btn-horror">เล่นใหม่</button>
+        </div>
+    </div>
+
+    <!-- Transition overlay -->
+    <div id="transition-overlay"></div>
+
+    <script src="rooms.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
