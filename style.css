@@ -233,9 +233,10 @@ body {
    Inventory Bar
    =========================== */
 #inventory-bar {
-    height: 72px; background: var(--bg-panel);
+    height: 90px; background: var(--bg-panel);
     border-top: 1px solid var(--border-subtle);
-    display: flex; align-items: center; padding: 0 16px; gap: 12px; z-index: 50;
+    display: flex; align-items: flex-start; padding: 10px 16px 0; gap: 12px; z-index: 50;
+    overflow: visible;
 }
 #inventory-label { font-size: 0.8rem; color: var(--text-dim); min-width: 60px; }
 #inventory-slots { display: flex; gap: 6px; flex: 1; }
