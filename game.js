@@ -122,7 +122,7 @@
             overlay.classList.remove('lights-off');
         }
 
-        renderHotspots(room);
+        renderActionPanel(room);
         closeInteractionPopup();
 
         // Idle death timer
@@ -137,20 +137,39 @@
         if (state.idleTimer) { clearTimeout(state.idleTimer); state.idleTimer = null; }
     }
 
-    function renderHotspots(room) {
-        const layer = $('hotspots-layer');
-        layer.innerHTML = '';
+    function isNavHotspot(hs) {
+        // A hotspot is "navigation" if its first interaction has text===null and calls goToRoom
+        const first = hs.interactions[0];
+        if (!first) return false;
+        // Check if label contains navigation keywords or first interaction is a direct room transition
+        const navKeywords = ['กลับ', 'ประตู', 'ออกสู่', 'ทางเดินสู่', 'บันไดขึ้น', 'บันไดลง', 'เดินไปที่', 'กลับเข้า'];
+        return navKeywords.some(kw => hs.label.includes(kw));
+    }
+
+    function renderActionPanel(room) {
+        const descEl = $('room-description');
+        descEl.textContent = room.description;
+
+        const exploreDiv = $('action-buttons-explore');
+        const navDiv = $('action-buttons-nav');
+        exploreDiv.innerHTML = '';
+        navDiv.innerHTML = '';
+
         room.hotspots.forEach(hs => {
-            const el = document.createElement('div');
-            el.className = 'hotspot';
-            el.dataset.id = hs.id;
-            el.dataset.label = hs.label;
-            el.style.left = hs.x; el.style.top = hs.y;
-            el.style.width = hs.w; el.style.height = hs.h;
-            el.addEventListener('click', (e) => { e.stopPropagation(); handleHotspotClick(hs); });
-            layer.appendChild(el);
+            const btn = document.createElement('button');
+            const isNav = isNavHotspot(hs);
+            btn.className = isNav ? 'action-btn-nav' : 'action-btn';
+            btn.textContent = hs.label;
+            btn.addEventListener('click', (e) => { e.stopPropagation(); handleHotspotClick(hs); });
+            if (isNav) {
+                navDiv.appendChild(btn);
+            } else {
+                exploreDiv.appendChild(btn);
+            }
         });
-        layer.addEventListener('click', (e) => { if (e.target === layer) closeInteractionPopup(); });
+
+        // Hide nav separator if no nav buttons
+        navDiv.style.display = navDiv.children.length > 0 ? '' : 'none';
     }
 
     // ─── Hotspot Interaction ───

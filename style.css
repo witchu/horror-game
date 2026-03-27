@@ -97,7 +97,7 @@ body {
    =========================== */
 #game-screen { position: fixed; inset: 0; display: flex; flex-direction: column; }
 
-#room-container { flex: 1; position: relative; overflow: hidden; background: #050705; }
+#room-container { flex: 1; min-height: 0; position: relative; overflow: hidden; background: #050705; }
 
 #room-bg {
     position: absolute; inset: 0;
@@ -108,7 +108,7 @@ body {
 #room-overlay { position: absolute; inset: 0; pointer-events: none; transition: background 0.5s ease; }
 #room-overlay.lights-off { background: rgba(0, 0, 5, 0.85); }
 
-#hotspots-layer { position: absolute; inset: 0; z-index: 10; }
+
 
 #vignette-overlay {
     position: absolute; inset: 0;
@@ -138,25 +138,81 @@ body {
     text-shadow: 0 0 8px rgba(0,0,0,0.8);
 }
 
-/* Hotspots */
-.hotspot {
-    position: absolute; cursor: pointer;
-    border: 2px solid transparent; border-radius: 4px;
-    transition: all 0.3s ease; z-index: 10;
+/* Action Panel */
+#action-panel {
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border-subtle);
+    padding: 10px 16px;
+    max-height: 200px;
+    overflow-y: auto;
+    flex-shrink: 0;
 }
-.hotspot::after {
-    content: attr(data-label);
-    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-    background: var(--bg-panel-trans); color: var(--text-bright);
-    padding: 4px 10px; border-radius: 3px; font-size: 0.75rem;
-    white-space: nowrap; opacity: 0; pointer-events: none;
-    transition: opacity 0.2s; border: 1px solid var(--border-subtle);
+
+#room-description {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    line-height: 1.5;
+    font-style: italic;
 }
-.hotspot:hover {
-    border-color: var(--border-glow); background: rgba(90,138,95,0.08);
-    box-shadow: 0 0 15px rgba(90,138,95,0.15), inset 0 0 15px rgba(90,138,95,0.05);
+
+#action-buttons-explore {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
 }
-.hotspot:hover::after { opacity: 1; }
+
+#action-buttons-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.action-btn {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    background: rgba(58, 90, 63, 0.1);
+    color: var(--text-main);
+    border: 1px solid var(--accent-green);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    background: var(--accent-green);
+    color: var(--text-bright);
+    box-shadow: 0 0 12px rgba(90, 138, 95, 0.3);
+    transform: translateY(-1px);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn-nav {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.action-btn-nav:hover {
+    color: var(--text-main);
+    border-color: var(--accent-green);
+    background: rgba(58, 90, 63, 0.08);
+}
 
 /* Interaction Popup */
 #interaction-popup {
