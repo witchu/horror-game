@@ -138,6 +138,28 @@ body {
     text-shadow: 0 0 8px rgba(0,0,0,0.8);
 }
 
+#hotspots-layer { position: absolute; inset: 0; z-index: 10; }
+
+/* Hotspots */
+.hotspot {
+    position: absolute; cursor: pointer;
+    border: 2px solid transparent; border-radius: 4px;
+    transition: all 0.3s ease; z-index: 10;
+}
+.hotspot::after {
+    content: attr(data-label);
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--bg-panel-trans); color: var(--text-bright);
+    padding: 4px 10px; border-radius: 3px; font-size: 0.75rem;
+    white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; border: 1px solid var(--border-subtle);
+}
+.hotspot:hover {
+    border-color: var(--border-glow); background: rgba(90,138,95,0.08);
+    box-shadow: 0 0 15px rgba(90,138,95,0.15), inset 0 0 15px rgba(90,138,95,0.05);
+}
+.hotspot:hover::after { opacity: 1; }
+
 /* Action Panel */
 #action-panel {
     background: var(--bg-panel);

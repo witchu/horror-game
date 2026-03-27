@@ -122,6 +122,7 @@
             overlay.classList.remove('lights-off');
         }
 
+        renderHotspots(room);
         renderActionPanel(room);
         closeInteractionPopup();
 
@@ -137,11 +138,26 @@
         if (state.idleTimer) { clearTimeout(state.idleTimer); state.idleTimer = null; }
     }
 
+    function renderHotspots(room) {
+        const layer = $('hotspots-layer');
+        layer.innerHTML = '';
+        room.hotspots.forEach(hs => {
+            if (!hs.x) return; // skip hotspots without coordinates
+            const el = document.createElement('div');
+            el.className = 'hotspot';
+            el.dataset.id = hs.id;
+            el.dataset.label = hs.label;
+            el.style.left = hs.x; el.style.top = hs.y;
+            el.style.width = hs.w; el.style.height = hs.h;
+            el.addEventListener('click', (e) => { e.stopPropagation(); handleHotspotClick(hs); });
+            layer.appendChild(el);
+        });
+        layer.addEventListener('click', (e) => { if (e.target === layer) closeInteractionPopup(); });
+    }
+
     function isNavHotspot(hs) {
-        // A hotspot is "navigation" if its first interaction has text===null and calls goToRoom
         const first = hs.interactions[0];
         if (!first) return false;
-        // Check if label contains navigation keywords or first interaction is a direct room transition
         const navKeywords = ['กลับ', 'ประตู', 'ออกสู่', 'ทางเดินสู่', 'บันไดขึ้น', 'บันไดลง', 'เดินไปที่', 'กลับเข้า'];
         return navKeywords.some(kw => hs.label.includes(kw));
     }
@@ -168,7 +184,6 @@
             }
         });
 
-        // Hide nav separator if no nav buttons
         navDiv.style.display = navDiv.children.length > 0 ? '' : 'none';
     }
 
