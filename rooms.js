@@ -249,7 +249,10 @@ ROOMS.hallway = {
             interactions: [
                 { condition: (s) => !s.flags.stairs_passed && !s.hasItem('flashlight'), text: 'บันไดมืดสนิท ต้องมีไฟฉายก่อน', action: null },
                 { condition: (s) => !s.flags.stairs_passed && s.hasItem('flashlight'), text: 'คุณส่องไฟฉาย เห็นบันได 12 ขั้น บางขั้นดูผุ... ต้องเลือกเหยียบให้ถูก', action: (s) => s.showStairPuzzle() },
-                { condition: (s) => s.flags.stairs_passed, text: null, action: (s) => s.goToRoom('kitchen') }
+                { condition: (s) => s.flags.stairs_passed, text: 'คุณลงบันไดมาถึงชั้นล่าง — จะไปทางไหน?', choices: [
+                    { text: '🍳 ไปห้องครัว', action: (s) => s.goToRoom('kitchen') },
+                    { text: '🛋 ไปห้องนั่งเล่น', action: (s) => s.goToRoom('living_room') }
+                ]}
             ]
         },
         {
@@ -272,14 +275,7 @@ ROOMS.hallway = {
                 { condition: (s) => !s.flags.bathroom_unlocked, text: 'ประตูห้องน้ำล็อคจากข้างใน ต้องเข้าจากห้องนอน', action: null }
             ]
         },
-        {
-            id: 'door_living_hall', label: 'ทางลงห้องนั่งเล่น',
-            x: '75%', y: '65%', w: '15%', h: '20%',
-            interactions: [
-                { condition: (s) => s.flags.stairs_passed, text: null, action: (s) => s.goToRoom('living_room') },
-                { condition: (s) => !s.flags.stairs_passed, text: 'ต้องลงบันไดก่อนถึงจะไปชั้นล่างได้', action: null }
-            ]
-        }
+
     ]
 };
 
