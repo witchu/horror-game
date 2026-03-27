@@ -429,6 +429,7 @@
                 $('bottle-overlay').classList.add('hidden');
                 if (bottle.correct) {
                     state.setFlag('found_digit2', true);
+                    state.removeItem('paper_scrap');
                     state.addJournal('💊 ขวดยาถูกต้อง เลขล็อต: ' + GATE_DIGIT_2 + ' — น่าจะเป็นรหัสหลักที่ 2');
                     showInteraction('คุณหยิบขวดยาสีขาว เลขล็อต ' + GATE_DIGIT_2 + ' — ตัวเลขนี้ดูสำคัญ', null);
                 } else { state.die('คุณหยิบขวดยาผิด... กลิ่นรุนแรงพุ่งออกมา ร่างกายชักกระตุกและล้มลง'); }
@@ -483,6 +484,7 @@
                 setTimeout(() => {
                     $('stove-overlay').classList.add('hidden');
                     state.setFlag('stove_done', true);
+                    state.removeItem('matchstick');
                     state.addItem('laundry_key');
                     state.addJournal('🍳 ทำอาหารเช้าสำเร็จ! ได้กุญแจห้องซักล้าง');
                     showInteraction('คุณจุดเตาถูกลำดับ! อาหารเช้าเสร็จ... และพบกุญแจห้องซักล้างในลิ้นชักที่ปลดล็อค', null);
@@ -620,6 +622,7 @@
 
     $('btn-washer-stop').addEventListener('click', () => {
         state.setFlag('washer_stopped', true);
+        state.removeItem('washer_manual');
         state.setFlag('washer_stop_time', Date.now());
         $('washer-status').textContent = 'เครื่องกำลังหยุด... รอให้หมดรอบ';
         $('btn-washer-stop').classList.add('hidden');

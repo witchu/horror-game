@@ -151,7 +151,7 @@ ROOMS.bathroom = {
             id: 'mirror_bathroom', label: 'กระจก',
             x: '18%', y: '10%', w: '18%', h: '30%',
             interactions: [
-                { condition: (s) => s.flags.bathroom_lights_off && !s.flags.has_wardrobe_code, text: 'ในความมืด... กระจกเรืองแสงสีเขียวจางๆ ปรากฏตัวเลข 3 หลัก: "' + WARDROBE_CODE + '"!', action: (s) => { s.setFlag('has_wardrobe_code', true); s.addJournal('🔢 เห็นรหัส "' + WARDROBE_CODE + '" บนกระจกห้องน้ำเมื่อปิดไฟ — น่าจะเป็นรหัสตู้เสื้อผ้าในห้องนอน'); }},
+                { condition: (s) => s.flags.bathroom_lights_off && !s.flags.has_wardrobe_code, text: 'ในความมืด... กระจกเรืองแสงสีเขียวจางๆ ปรากฏตัวเลข 3 หลัก: "' + WARDROBE_CODE + '"!', action: (s) => { s.removeItem('old_journal'); s.setFlag('has_wardrobe_code', true); s.addJournal('🔢 เห็นรหัส "' + WARDROBE_CODE + '" บนกระจกห้องน้ำเมื่อปิดไฟ — น่าจะเป็นรหัสตู้เสื้อผ้าในห้องนอน'); }},
                 { condition: (s) => s.flags.bathroom_lights_off && s.flags.has_wardrobe_code, text: 'รหัส "' + WARDROBE_CODE + '" ยังคงเรืองแสงอยู่บนกระจก', action: null },
                 { condition: (s) => !s.flags.bathroom_lights_off, text: 'คุณมองกระจก... ภาพสะท้อนเคลื่อนไหวช้ากว่าคุณเล็กน้อย', action: (s) => s.startMirrorStare('bathroom') }
             ]
@@ -450,8 +450,8 @@ ROOMS.laundry = {
             id: 'fire_exit', label: 'ประตูหนีไฟ (โซ่)',
             x: '80%', y: '15%', w: '15%', h: '55%',
             interactions: [
-                { condition: (s) => s.hasItem('scissors') && !s.flags.fire_exit_open, text: 'คุณใช้กรรไกรตัดโซ่... ประตูหนีไฟเปิดออก! เป็นทางลัดไปสวนหน้าบ้าน', action: (s) => { s.setFlag('fire_exit_open', true); s.addJournal('🚪 ตัดโซ่ประตูหนีไฟ — ทางลัดไปสวนหน้าบ้าน (แต่จะพลาดเบาะแสสำคัญ)'); s.goToRoom('front_garden'); }},
-                { condition: (s) => !s.hasItem('scissors') && !s.flags.fire_exit_open, text: 'ประตูหนีไฟถูกล็อคด้วยโซ่ ต้องมีอะไรตัด', action: null },
+                { condition: (s) => s.flags.found_scissors && !s.flags.fire_exit_open, text: 'คุณใช้กรรไกรตัดโซ่... ประตูหนีไฟเปิดออก! เป็นทางลัดไปสวนหน้าบ้าน', action: (s) => { s.removeItem('scissors'); s.setFlag('fire_exit_open', true); s.addJournal('🚪 ตัดโซ่ประตูหนีไฟ — ทางลัดไปสวนหน้าบ้าน (แต่จะพลาดเบาะแสสำคัญ)'); s.goToRoom('front_garden'); }},
+                { condition: (s) => !s.flags.found_scissors && !s.flags.fire_exit_open, text: 'ประตูหนีไฟถูกล็อคด้วยโซ่ ต้องมีอะไรตัด', action: null },
                 { condition: (s) => s.flags.fire_exit_open, text: null, action: (s) => s.goToRoom('front_garden') }
             ]
         },
@@ -476,7 +476,7 @@ ROOMS.living_room = {
             id: 'sofa', label: 'โซฟา',
             x: '25%', y: '40%', w: '25%', h: '25%',
             interactions: [
-                { condition: (s) => !s.flags.found_remote && !s.flags.found_garden_map, text: 'คุณค้นใต้เบาะโซฟา... พบรีโมทคอนโทรลและแผนที่สวนหน้าบ้าน!', action: (s) => { s.addItem('remote'); s.addItem('garden_map'); s.setFlag('found_remote', true); s.setFlag('found_garden_map', true); s.addJournal('📺 พบรีโมทคอนโทรลใต้โซฟา'); s.addJournal('🗺️ พบแผนที่สวนหน้าบ้าน — แสดงทางเดินปลอดภัย'); }},
+                { condition: (s) => !s.flags.found_remote && !s.flags.found_garden_map, text: 'คุณค้นใต้เบาะโซฟา... พบรีโมทคอนโทรลและแผนที่สวนหน้าบ้าน!', action: (s) => { s.addItem('remote'); s.addItem('garden_map'); s.setFlag('found_remote', true); s.setFlag('found_garden_map', true); s.addJournal('📺 พบรีโมทคอนโทรลใต้โซฟา'); s.addJournal('🗺️ พบแผนที่สวนหน้าบ้าน — แสดงทางเดินปลอดภัย (เก็บไว้ใช้ที่สวน)'); }},
                 { condition: (s) => s.flags.found_remote, text: 'ใต้เบาะโซฟาว่างเปล่าแล้ว', action: null }
             ]
         },
@@ -484,8 +484,8 @@ ROOMS.living_room = {
             id: 'tv', label: 'ทีวี',
             x: '55%', y: '15%', w: '18%', h: '30%',
             interactions: [
-                { condition: (s) => !s.hasItem('remote'), text: 'ทีวีจอใหญ่ปิดอยู่ แต่หน้าจอสะท้อนแสงกะพริบเป็นระยะ ต้องหารีโมทก่อน', action: null },
-                { condition: (s) => s.hasItem('remote') && !s.flags.tv_watched, text: 'คุณกดรีโมทเปิดทีวี... หน้าจอแสดงลำดับตัวเลข: "ตำแหน่ง 1, 3, 5 จากรูปถ่ายในโถง" แล้วดับไป', action: (s) => { s.setFlag('tv_watched', true); s.setFlag('has_box_code', true); s.addJournal('�� TV แสดงรหัส: ใช้ตัวเลขตำแหน่ง 1, 3, 5 จากรูปถ่ายในโถง → ' + HALLWAY_BOX_CODE); }},
+                { condition: (s) => !s.flags.found_remote, text: 'ทีวีจอใหญ่ปิดอยู่ แต่หน้าจอสะท้อนแสงกะพริบเป็นระยะ ต้องหารีโมทก่อน', action: null },
+                { condition: (s) => s.flags.found_remote && !s.flags.tv_watched, text: 'คุณกดรีโมทเปิดทีวี... หน้าจอแสดงลำดับตัวเลข: "ตำแหน่ง 1, 3, 5 จากรูปถ่ายในโถง" แล้วดับไป', action: (s) => { s.removeItem('remote'); s.setFlag('tv_watched', true); s.setFlag('has_box_code', true); s.addJournal('�� TV แสดงรหัส: ใช้ตัวเลขตำแหน่ง 1, 3, 5 จากรูปถ่ายในโถง → ' + HALLWAY_BOX_CODE); }},
                 { condition: (s) => s.flags.tv_watched, text: 'ทีวีดับอยู่ ไม่ตอบสนองอีกแล้ว', action: null }
             ]
         },
@@ -562,12 +562,12 @@ ROOMS.front_garden = {
             id: 'garden_path', label: 'ทางเดินในสวน',
             x: '20%', y: '35%', w: '50%', h: '40%',
             interactions: [
-                { condition: (s) => !s.hasItem('garden_map') && !s.hasItem('broom'), text: 'สวนมีทางเดินซีเมนต์แตกร้าว แต่หญ้ารกมาก ไม่รู้ว่าตรงไหนปลอดภัย...', choices: [
+                { condition: (s) => !s.flags.found_garden_map && !s.flags.found_broom, text: 'สวนมีทางเดินซีเมนต์แตกร้าว แต่หญ้ารกมาก ไม่รู้ว่าตรงไหนปลอดภัย...', choices: [
                     { text: 'เดินลงหญ้า', action: (s) => s.die('คุณเหยียบกับดักที่ฝังอยู่ใต้ดิน...') },
                     { text: 'ถอยกลับ', action: null }
                 ]},
-                { condition: (s) => s.hasItem('garden_map') && !s.flags.garden_passed, text: 'คุณใช้แผนที่สวน... เห็นทางเดินปลอดภัย!', action: (s) => { s.setFlag('garden_passed', true); s.showGardenMap(); }},
-                { condition: (s) => s.hasItem('broom') && !s.hasItem('garden_map') && !s.flags.garden_passed, text: 'คุณใช้ไม้กวาดเคาะดินทดสอบ... ช้าแต่ปลอดภัย ค่อยๆ เดินผ่านสวนได้', action: (s) => { s.setFlag('garden_passed', true); s.addJournal('🧹 ใช้ไม้กวาดเคาะดินผ่านสวนอย่างปลอดภัย'); }},
+                { condition: (s) => s.flags.found_garden_map && !s.flags.garden_passed, text: 'คุณใช้แผนที่สวน... เห็นทางเดินปลอดภัย!', action: (s) => { s.removeItem('garden_map'); s.setFlag('garden_passed', true); s.showGardenMap(); }},
+                { condition: (s) => s.flags.found_broom && !s.flags.found_garden_map && !s.flags.garden_passed, text: 'คุณใช้ไม้กวาดเคาะดินทดสอบ... ช้าแต่ปลอดภัย ค่อยๆ เดินผ่านสวนได้', action: (s) => { s.removeItem('broom'); s.setFlag('garden_passed', true); s.addJournal('🧹 ใช้ไม้กวาดเคาะดินผ่านสวนอย่างปลอดภัย'); }},
                 { condition: (s) => s.flags.garden_passed, text: 'ทางเดินที่ปลอดภัยแล้ว', action: null }
             ]
         },
